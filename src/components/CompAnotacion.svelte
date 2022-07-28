@@ -64,22 +64,23 @@
 <form>
 	<div class="row gx-2 align-items-end bg-anotacion py-1 rounded">
 		<div class="col-12 col-md-6">
-			<div class="input-group">
-				<span class="input-group-text bginputgroup" id="basic-addon1">Descripción</span>
+			<div class="form-floating">
 				<input
-					bind:value={anotacion.descripcion}
-					on:change={actualizarAnotacion}
-					class="form-control"
-					type="text"
-					placeholder="Descripción"
-					name="descripcion"
-					required
+				id="descripcion"
+				bind:value={anotacion.descripcion}
+				on:change={actualizarAnotacion}
+				class="form-control"
+				type="text"
+				placeholder="Descripción"
+				name="descripcion"
+				required
 				/>
+				<label for="descripcion">Descripción</label>
+
 			</div>
 		</div>
 		<div class="col-6 col-md-2">
-			<div class="input-group">
-				<span class="input-group-text bginputgroup" id="basic-addon1">Previsto</span>
+			<div class="form-floating">
 				<input
 					on:change={actualizarAnotacion}
 					bind:value={anotacion.fechaprevisto}
@@ -87,12 +88,13 @@
 					type="date"
 					placeholder="Fecha Previsto"
 					name="fechaprevisto"
+					id="fechaprevisto"
 				/>
+				<label for="fechaprevisto">Fecha Previsto</label>
 			</div>
 		</div>
 		<div class="col-6 col-md-2">
-			<div class="input-group">
-				<span class="input-group-text bginputgroup" id="basic-addon1">Realizado</span>
+			<div class="form-floating">
 				<input
 					on:change={actualizarAnotacion}
 					bind:value={anotacion.fecharealizado}
@@ -100,17 +102,19 @@
 					type="date"
 					placeholder="Fecha Previsto"
 					name="fecharealizado"
+					id="fecharealizado"
 				/>
+				<label for="fecharealizado">Fecha Realizado</label>
 			</div>
 		</div>
 		{#if anotacion.id === ''}
-			<div class="col-16 col-md-1">
+			<div class="col-6 col-md-1">
 				<div class="control">
 					<button on:click|preventDefault={guardaranotacion} class="btn btn-light" type="submit">Aceptar</button>
 				</div>
 			</div>
 			{:else}
-			<div class="col-16 col-md-1">
+			<div class="col-6 col-md-1">
 				<div class="control">
 					<button on:click|preventDefault={del} class="btn btn-danger" type="submit"><i class="bi bi-trash"></i></button>
 				</div>
@@ -122,9 +126,5 @@
 <style>
 	.bg-anotacion {
 		background-color: #cfecff;
-	}
-
-	.bginputgroup {
-		background-color: #ffebe5;
 	}
 </style>
