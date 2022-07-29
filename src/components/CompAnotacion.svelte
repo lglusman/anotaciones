@@ -1,8 +1,11 @@
 <script lang="ts">
 	import { Anotacion } from '../entities/Anotacion';
-	import { tick } from 'svelte';
+	import { createEventDispatcher, tick } from 'svelte';
 	import { user } from '../stores/users';
 	import { storeanotaciones } from '../stores/anotaciones';
+
+	const dispatch = createEventDispatcher();
+
 
 	export let anotacion: Anotacion = new Anotacion(
 		'',
@@ -32,6 +35,7 @@
 				anotacion.fecharealizado
 			);
 			await anot.doSave(Anotacion.collection);
+			dispatch('saved', null);
 			if (alta) {
 				storeanotaciones.agregarAnotacion(anot);
 			} else {
@@ -49,16 +53,14 @@
 		}
 	};
 
-
 	const del = async () => {
 		if (confirm('¿Está seguro de eliminar esta nota?')) {
-			await Anotacion.delete(anotacion.id || ''); 
+			await Anotacion.delete(anotacion.id || '');
 			storeanotaciones.del(anotacion.id || '');
 			// await tick();
-			// 
+			//
 		}
 	};
-
 </script>
 
 <form>
@@ -66,17 +68,16 @@
 		<div class="col-12 col-md-6">
 			<div class="form-floating">
 				<input
-				id="descripcion"
-				bind:value={anotacion.descripcion}
-				on:change={actualizarAnotacion}
-				class="form-control"
-				type="text"
-				placeholder="Descripción"
-				name="descripcion"
-				required
+					id="descripcion"
+					bind:value={anotacion.descripcion}
+					on:change={actualizarAnotacion}
+					class="form-control"
+					type="text"
+					placeholder="Descripción"
+					name="descripcion"
+					required
 				/>
 				<label for="descripcion">Descripción</label>
-
 			</div>
 		</div>
 		<div class="col-6 col-md-2">
@@ -110,13 +111,17 @@
 		{#if anotacion.id === ''}
 			<div class="col-6 col-md-1">
 				<div class="control">
-					<button on:click|preventDefault={guardaranotacion} class="btn btn-light" type="submit">Aceptar</button>
+					<button on:click|preventDefault={guardaranotacion} class="btn btn-light" type="submit"
+						>Aceptar</button
+					>
 				</div>
 			</div>
-			{:else}
+		{:else}
 			<div class="col-6 col-md-1">
 				<div class="control">
-					<button on:click|preventDefault={del} class="btn btn-danger" type="submit"><i class="bi bi-trash"></i></button>
+					<button on:click|preventDefault={del} class="btn btn-danger" type="submit"
+						><i class="bi bi-trash" /></button
+					>
 				</div>
 			</div>
 		{/if}

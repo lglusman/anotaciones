@@ -5,3 +5,6 @@ export type FireQuery = {
   opStr: WhereFilterOp
   value: unknown
 };
+
+export type FiltroEstado = 'pendientes' | 'proximos' | 'vencidos' | '';
+  

@@ -17,4 +17,11 @@
 	$: anotacion = $storeanotaciones && $storeanotaciones.find((x) => x.id === idanotacion);
 </script>
 
+<h5 class="mt-2">
+	<button
+		class="btn btn-outline-primary btn-sm"
+		on:click={() => goto(`/anotaciones/${anotacion?.categoria}`, { replaceState: true })}
+		><i class="bi bi-arrow-return-left" /> Volver</button
+	>
+</h5>
 <CompAnotacion {anotacion} />
