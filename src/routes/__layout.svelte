@@ -8,11 +8,23 @@
 	import { logout } from '../firebase';
 	import icon from '../assets/favicon.png';
 	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 
 	onMount(async () => {
 		storecategorias.setear(await Categoria.getAll());
 		storeanotaciones.setear(await Anotacion.getAll());
 	});
+
+	let cats: Categoria[] = [];
+
+	$: {
+		cats = [...$storecategorias.sort((a, b) => a.categoria.localeCompare(b.categoria))];
+		console.log($page.params.categoria);
+		if (!$page.url.pathname.toString().includes('anotaciones')) {
+			cats = [new Categoria('', 'Seleccione Categoria'), ...cats];
+		}
+		cats = cats;
+	}
 </script>
 
 <nav class="navbar fixed-top bgmenu">
@@ -67,10 +79,12 @@
 	{#if $storecategorias && $user}
 		Categoria:
 		<select class="bgselect" on:change={() => storecategorias.setear}>
-			{#each $storecategorias as categoria}
+			{#each cats as categoria}
 				<option
 					value={categoria.id}
-					on:click={goto(`/anotaciones/${categoria.id}`, { replaceState: true })}
+					selected={($page.params.categoria || '') == categoria.id}
+					on:click|preventDefault={() =>
+						goto(`/anotaciones/${categoria.id}`, { replaceState: true })}
 					>{categoria.categoria}</option
 				>
 			{/each}
