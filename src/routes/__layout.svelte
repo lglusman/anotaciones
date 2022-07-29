@@ -16,15 +16,18 @@
 	});
 
 	let cats: Categoria[] = [];
+	$: selectedcat = $page.params.categoria || '';
 
 	$: {
 		cats = [...$storecategorias.sort((a, b) => a.categoria.localeCompare(b.categoria))];
-		console.log($page.params.categoria);
 		if (!$page.url.pathname.toString().includes('anotaciones')) {
 			cats = [new Categoria('', 'Seleccione Categoria'), ...cats];
 		}
-		cats = cats;
+		// cats = cats;
 	}
+	const handlechange = () => {
+		goto(`/anotaciones/${selectedcat}`, { replaceState: true });
+	};
 </script>
 
 <nav class="navbar fixed-top bgmenu">
@@ -78,15 +81,9 @@
 <div class="container-fluid cont">
 	{#if $storecategorias && $user}
 		Categoria:
-		<select class="bgselect" on:change={() => storecategorias.setear}>
+		<select class="bgselect" bind:value={selectedcat} on:change={handlechange}>
 			{#each cats as categoria}
-				<option
-					value={categoria.id}
-					selected={($page.params.categoria || '') == categoria.id}
-					on:click|preventDefault={() =>
-						goto(`/anotaciones/${categoria.id}`, { replaceState: true })}
-					>{categoria.categoria}</option
-				>
+				<option value={categoria.id}>{categoria.categoria}</option>
 			{/each}
 		</select>
 	{/if}
