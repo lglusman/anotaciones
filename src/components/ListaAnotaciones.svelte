@@ -4,7 +4,9 @@
 	import CompAnotacion from './CompAnotacion.svelte';
 	import { user } from '../stores/users';
 	import { goto } from '$app/navigation';
-	
+	import { slide } from 'svelte/transition';
+	import { quintOut } from 'svelte/easing';
+
 	export let anotaciones: Anotacion[] = [];
 	
 	const dispatch = createEventDispatcher();
@@ -35,8 +37,8 @@
 	 <CompAnotacion on:saved={handlesaved} alta={true} anotacion={newAnotacion} />
 {/if}
 {#if anotaciones}
-	{#each anotaciones as anotacion, index}
-		<div class="row" >
+	{#each anotaciones as anotacion, index (anotacion.id)}
+		<div class="row" transition:slide="{{duration: 300, easing: quintOut }}">
 			<div class="col-12 gy-2">
 				<div class="card {index % 2 === 0 ? 'card1' : 'card2'} border-0 shadow">
 					<div class="card-body">

@@ -24,8 +24,7 @@
 	let agregar: boolean = false;
 	let mostrarfiltros: boolean = false;
 	let filtro: FiltroEstado = '';
-	$: mostrarfiltros = !!filtro && !filtro ;
-	
+	$: mostrarfiltros = !!filtro && !filtro;
 </script>
 
 <div class="col-12 d-flex gap-2 justify-content-center mt-2">
