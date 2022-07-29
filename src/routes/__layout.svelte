@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { afterUpdate, beforeUpdate } from 'svelte';
 	import { user } from '../stores/users';
 	import { storecategorias } from '../stores/categorias';
 	import { storeanotaciones } from '../stores/anotaciones';
@@ -10,24 +10,44 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 
-	onMount(async () => {
-		storecategorias.setear(await Categoria.getAll());
-		storeanotaciones.setear(await Anotacion.getAll());
+	let selectedcat: string = '';
+
+	const paginanoincluyeanotaciones = () => {
+		return !$page.url.pathname.toString().includes('anotaciones');
+	};
+
+	let mostrariracategoria = false;
+	beforeUpdate(() => {
+		cats = [...$storecategorias.sort((a, b) => a.categoria.localeCompare(b.categoria))];
+		catsir = [new Categoria('', 'Seleccione Categoria'), ...cats];
+		if (paginanoincluyeanotaciones()) {
+			mostrariracategoria = true;
+			selectedcat = '';
+		} else {
+			mostrariracategoria = false;
+			selectedcat = $page.params.categoria;
+		}
 	});
 
-	let cats: Categoria[] = [];
-	$: selectedcat = $page.params.categoria || '';
+	$: {
+		if ($user) {
+			Categoria.getAll().then((categorias) => {
+				storecategorias.setear(categorias);
+			});
+			Anotacion.getAll().then((anotaciones) => {
+				storeanotaciones.setear(anotaciones);
+			});
+		}
+	}
+	// $: selectedcat = $page.params.categoria || '';
 
 	$: {
-		cats = [...$storecategorias.sort((a, b) => a.categoria.localeCompare(b.categoria))];
-		if (!$page.url.pathname.toString().includes('anotaciones')) {
-			cats = [new Categoria('', 'Seleccione Categoria'), ...cats];
+		if (selectedcat) {
+			goto(`/anotaciones/${selectedcat}`, { replaceState: true });
 		}
-		// cats = cats;
 	}
-	const handlechange = () => {
-		goto(`/anotaciones/${selectedcat}`, { replaceState: true });
-	};
+	let cats: Categoria[] = [];
+	let catsir: Categoria[] = [];
 </script>
 
 <nav class="navbar fixed-top bgmenu">
@@ -79,10 +99,18 @@
 	</div>
 </nav>
 <div class="container-fluid cont">
-	{#if $storecategorias && $user}
+	{#if $storecategorias && $user && !mostrariracategoria}
 		Categoria:
-		<select class="bgselect" bind:value={selectedcat} on:change={handlechange}>
+		<select class="bgselect" bind:value={selectedcat}>
 			{#each cats as categoria}
+				<option value={categoria.id}>{categoria.categoria}</option>
+			{/each}
+		</select>
+	{/if}
+	{#if mostrariracategoria}
+		Categoria:
+		<select class="bgselect" bind:value={selectedcat}>
+			{#each catsir as categoria}
 				<option value={categoria.id}>{categoria.categoria}</option>
 			{/each}
 		</select>
