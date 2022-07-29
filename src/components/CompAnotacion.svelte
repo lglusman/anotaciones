@@ -77,7 +77,6 @@
 				<input
 					id="descripcion"
 					bind:value={anotacion.descripcion}
-					on:change={actualizarAnotacion}
 					class="form-control"
 					type="text"
 					placeholder="Descripción"
@@ -90,7 +89,6 @@
 		<div class="col-6 col-md-2">
 			<div class="form-floating">
 				<input
-					on:change={actualizarAnotacion}
 					bind:value={anotacion.fechaprevisto}
 					class="form-control"
 					type="date"
@@ -104,7 +102,6 @@
 		<div class="col-6 col-md-2">
 			<div class="form-floating">
 				<input
-					on:change={actualizarAnotacion}
 					bind:value={anotacion.fecharealizado}
 					class="form-control"
 					type="date"

@@ -10,7 +10,7 @@ const createAnotaciones = () => {
 	const filtros = writable<{ categoria: string; estado: FiltroEstado; orden: Orden }>({
 		categoria: 'aaa',
 		estado: 'pendientes',
-		orden: 'asc'
+		orden: 'desc'
 	});
 
 	const listafiltrada = derived([storeanotaciones, filtros], ($values, set) => {

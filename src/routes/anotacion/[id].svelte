@@ -38,9 +38,16 @@
 
 <h5 class="mt-2">
 	<button
-		class="btn btn-outline-primary btn-sm"
+		class="btn btnvolver btn-sm"
 		on:click={volver}
 		><i class="bi bi-arrow-return-left" /> Volver</button
 	>
 </h5>
 <CompAnotacion on:savedordeleted={volver} anotacion={anotacioncomp} />
+
+<style>
+	.btnvolver {
+		background-color: #e5f1ff;
+	}
+	
+</style>
