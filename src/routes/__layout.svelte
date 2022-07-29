@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { page } from '$app/stores';
 	import { user } from '../stores/users';
 	import { storecategorias } from '../stores/categorias';
 	import { storeanotaciones } from '../stores/anotaciones';
@@ -8,6 +7,7 @@
 	import { Anotacion } from '../entities/Anotacion';
 	import { logout } from '../firebase';
 	import icon from '../assets/favicon.png';
+	import { goto } from '$app/navigation';
 
 	onMount(async () => {
 		storecategorias.setear(await Categoria.getAll());
@@ -43,9 +43,7 @@
 				<ul class="navbar-nav">
 					{#if $user}
 						<li>
-							<a class="nav-link" href="/nuevacategoria">
-								<i class="bi bi-tag" /> Categorias</a
-							>
+							<a class="nav-link" href="/nuevacategoria"> <i class="bi bi-tag" /> Categorias</a>
 						</li>
 					{:else}
 						<li>
@@ -67,36 +65,40 @@
 </nav>
 <div class="container-fluid cont">
 	{#if $storecategorias && $user}
-		<div class="row tabcategs">
-			<ul class="nav nav-tabs">
-				{#each $storecategorias as categoria}
-					<li class="nav-item">
-						<a
-							class="nav-link link-info"
-							class:active={$page.params.categoria === categoria.id}
-							aria-current="page"
-							href="/anotaciones/{categoria.id}">{categoria.categoria}</a
-						>
-					</li>
-				{/each}
-			</ul>
-		</div>
+		Categoria:
+		<select class="bgselect" on:change={() => storecategorias.setear}>
+			{#each $storecategorias as categoria}
+				<option
+					value={categoria.id}
+					on:click={goto(`/anotaciones/${categoria.id}`, { replaceState: true })}
+					>{categoria.categoria}</option
+				>
+			{/each}
+		</select>
 	{/if}
 	<slot />
 </div>
 
 <style>
 	.cont {
-		margin-top: 60px;
+		margin-top: 70px;
 	}
 	.bgmenu {
-		background-color: #f6fce8;
+		background-color: #e9e8fc;
+		border-bottom: #dad9f8 solid 1px;
 	}
-	.tabcategs {
-		background-color: #cffffd;
-	}
+
 	.bgcanvas {
 		background-color: #f6fce8;
 	}
-	
+	.bgselect {
+		background-color: #e8f5fc;
+		border: 1px solid #ced4da;
+		border-radius: 0.25rem;
+		color: #495057;
+		font-size: 1rem;
+		height: calc(2rem + 2px);
+		line-height: 1.5;
+		padding-left: 0.5rem;
+	}
 </style>
