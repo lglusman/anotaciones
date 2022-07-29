@@ -6,7 +6,6 @@
 
 	const dispatch = createEventDispatcher();
 
-
 	export let anotacion: Anotacion = new Anotacion(
 		'',
 		new Date(),
@@ -19,10 +18,17 @@
 	export let alta: boolean = false;
 
 	const actualizarAnotacion = () => {
-		if (!alta) {
+		if (!alta && anotacion.id) {
 			guardaranotacion();
+			dispatch('saved', null);
 		}
 	};
+
+	const handleguardar = () => {
+		guardaranotacion();
+		dispatch('savedordeleted', null);
+	};
+
 	const guardaranotacion = async () => {
 		try {
 			let anot = new Anotacion(
@@ -55,10 +61,11 @@
 
 	const del = async () => {
 		if (confirm('¿Está seguro de eliminar esta nota?')) {
-			await Anotacion.delete(anotacion.id || '');
 			storeanotaciones.del(anotacion.id || '');
-			// await tick();
-			//
+			await Anotacion.delete(anotacion.id || '');
+			await tick();
+			dispatch('savedordeleted', null);
+			anotacion = new Anotacion('', new Date(), '', '', $user?.uid || '', null, null);
 		}
 	};
 </script>
@@ -108,28 +115,27 @@
 				<label for="fecharealizado">Fecha Realizado</label>
 			</div>
 		</div>
-		{#if anotacion.id === ''}
-			<div class="col-6 col-md-1">
-				<div class="control">
-					<button on:click|preventDefault={guardaranotacion} class="btn btn-light" type="submit"
-						>Aceptar</button
-					>
-				</div>
-			</div>
-		{:else}
-			<div class="col-6 col-md-1">
-				<div class="control">
-					<button on:click|preventDefault={del} class="btn btn-danger" type="submit"
+		<div class="col-6 col-md-2">
+				<button on:click|preventDefault={handleguardar} class="btn bg-aceptar" type="submit"
+					><i class="bi bi-check2" /></button
+				>
+			{#if anotacion.id !== ''}
+					<button on:click|preventDefault={del} class="btn bg-eliminar" type="submit"
 						><i class="bi bi-trash" /></button
 					>
-				</div>
-			</div>
-		{/if}
+			{/if}
+		</div>
 	</div>
 </form>
 
 <style>
 	.bg-anotacion {
-		background-color: #cfecff;
+		background-color: #cfedff;
+	}
+	.bg-aceptar {
+		background-color: #cffff5;
+	}
+	.bg-eliminar {
+		background-color: #ffcfcf;
 	}
 </style>

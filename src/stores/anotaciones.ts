@@ -66,7 +66,15 @@ const createAnotaciones = () => {
 			storeanotaciones.set(anotaciones);
 		},
 		del: (id: string) => {
-			storeanotaciones.update((anotaciones) => anotaciones.filter((element) => element.id != id));
+      
+      storeanotaciones.update((anotaciones) => {
+				const index = anotaciones.findIndex((a) => a.id === id);
+				if (index === -1) {
+					return anotaciones;
+				}
+				return [...anotaciones.slice(0, index),...anotaciones.slice(index + 1)];
+			});
+			//  storeanotaciones.update((anotaciones) => anotaciones.filter((element) => element.id != id));
 		},
 		setFiltro: (filtro: FiltroEstado) => {
 			filtros.update((filtros) => ({ ...filtros, estado: filtro })); // estado: filtro
