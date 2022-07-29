@@ -48,7 +48,7 @@
 						<div class="row">
 							<div class="col-6 card-text fw-light">
 								<i class="bi bi-calendar3" />
-								{anotacion.fechaprevisto ? anotacion.fechaprevisto : ''}
+								{anotacion.fechaprevisto ? new Intl.DateTimeFormat('es-Ar').format(new Date(anotacion.fechaprevisto)) : 'Sin Programar'}
 							</div>
 							<div class="col-6 card-text text-end fw-light">
 								<i class="bi bi-calendar-check" />

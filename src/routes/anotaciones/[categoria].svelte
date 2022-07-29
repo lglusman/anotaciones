@@ -6,8 +6,8 @@
 	import { storeanotaciones } from '../../stores/anotaciones';
 	import { page } from '$app/stores';
 	import ComboCategorias from '../../components/ComboCategorias.svelte';
-	import type { Anotacion } from 'src/entities/Anotacion';
-	import type { FiltroEstado } from 'src/entities/types';
+	import type { Anotacion } from '../../entities/Anotacion';
+	import type { FiltroEstado, Orden } from '../../entities/types';
 
 	onMount(() => {
 		if (!$user) {
@@ -15,12 +15,16 @@
 		}
 	});
 
+	
 	$: storeanotaciones.setFiltro(filtro);
+	$: storeanotaciones.setOrden(orden);
 	$: categoria = $page.params.categoria;
 	$: storeanotaciones.setcategoria(categoria);
 	$: listastored = storeanotaciones.lista;
 	$: lista = $listastored as Anotacion[];
+	
 
+	let orden: Orden = 'asc';
 	let agregar: boolean = false;
 	let mostrarfiltros: boolean = false;
 	let filtro: FiltroEstado = '';
@@ -45,6 +49,13 @@
 	<div class="col-6 text-end">
 		<button class="btn" on:click={() => (mostrarfiltros = !mostrarfiltros)}>
 			<i class="bi bi-funnel" />
+		</button>
+		<button class="btn" on:click={() => (orden === 'asc' ? orden = 'desc' : orden = 'asc')}>
+			{#if orden === 'asc'}
+				<i class="bi bi-arrow-up" />
+			{:else}
+				<i class="bi bi-arrow-down" />
+			{/if}
 		</button>
 		{#if mostrarfiltros}
 			<select

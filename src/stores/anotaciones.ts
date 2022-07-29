@@ -1,5 +1,5 @@
 import type { Anotacion } from '../entities/Anotacion';
-import type { FiltroEstado } from '../entities/types';
+import type { FiltroEstado, Orden } from '../entities/types';
 import { derived, writable } from 'svelte/store';
 
 const createAnotaciones = () => {
@@ -7,9 +7,10 @@ const createAnotaciones = () => {
 	const storeanotaciones = writable<Anotacion[]>([]);
 	const { subscribe } = storeanotaciones;
 
-	const filtros = writable<{ categoria: string; estado: FiltroEstado }>({
+	const filtros = writable<{ categoria: string; estado: FiltroEstado; orden: Orden }>({
 		categoria: 'aaa',
-		estado: 'pendientes'
+		estado: 'pendientes',
+		orden: 'asc'
 	});
 
 	const listafiltrada = derived([storeanotaciones, filtros], ($values, set) => {
@@ -17,17 +18,33 @@ const createAnotaciones = () => {
 		lista = lista.filter((a) => a.categoria === $values[1].categoria);
 		if ($values[1].estado === 'proximos') {
 			lista = lista.filter(
-				(a) => !a.fecharealizado && a.fechaprevisto && a.fechaprevisto.toString() > new Date().toISOString().slice(0, 10)
+				(a) =>
+					!a.fecharealizado &&
+					a.fechaprevisto &&
+					a.fechaprevisto.toString() > new Date().toISOString().slice(0, 10)
 			);
 		}
 		if ($values[1].estado === 'vencidos') {
 			lista = lista.filter(
-				(a) => !a.fecharealizado && a.fechaprevisto && a.fechaprevisto.toString() < new Date().toISOString().slice(0, 10)
+				(a) =>
+					!a.fecharealizado &&
+					a.fechaprevisto &&
+					a.fechaprevisto.toString() < new Date().toISOString().slice(0, 10)
 			);
 		}
 		if ($values[1].estado === 'pendientes') {
 			lista = lista.filter((a) => !a.fecharealizado);
 		}
+		if ($values[1].orden === 'desc') {
+			lista.sort((a, b) => {
+				return (a.fechaprevisto || 'zzz') < (b.fechaprevisto || 'zzz') ? 1 : -1;
+			});
+		} else {
+			lista.sort((a, b) => {
+				return (a.fechaprevisto || '') > (b.fechaprevisto || '') ? 1 : -1;
+			});
+		}
+
 		set(lista);
 	});
 
@@ -51,9 +68,12 @@ const createAnotaciones = () => {
 		del: (id: string) => {
 			storeanotaciones.update((anotaciones) => anotaciones.filter((element) => element.id != id));
 		},
-		setFiltro: (filtro:FiltroEstado) => {
-			filtros.update((filtros) => ({ ...filtros, estado: filtro })); // toggle pendientes
+		setFiltro: (filtro: FiltroEstado) => {
+			filtros.update((filtros) => ({ ...filtros, estado: filtro })); // estado: filtro
 		},
+    setOrden: (orden: Orden) => {
+      filtros.update((filtros) => ({ ...filtros, orden: orden })); 
+    },
 		setcategoria: (categoria: string) => {
 			filtros.update((filtros) => ({ ...filtros, categoria }));
 		},
