@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { afterUpdate, beforeUpdate } from 'svelte';
+	import {  beforeUpdate } from 'svelte';
 	import { user } from '../stores/users';
 	import { storecategorias } from '../stores/categorias';
 	import { storeanotaciones } from '../stores/anotaciones';
@@ -10,7 +10,11 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 
+
 	let selectedcat: string = '';
+
+	$: filtros = storeanotaciones.listafiltros;
+	$: listafiltros = $filtros;
 
 	const paginanoincluyeanotaciones = () => {
 		return !$page.url.pathname.toString().includes('anotaciones');

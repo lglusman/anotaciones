@@ -6,6 +6,6 @@ export type FireQuery = {
 	value: unknown;
 };
 
-export type FiltroEstado = 'pendientes' | 'proximos' | 'vencidos' | '';
+export const FiltroEstado = ['todos', 'pendientes', 'proximos', 'vencidos', 'realizados' ] as const;
 
 export type Orden = 'asc' | 'desc';

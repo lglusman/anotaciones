@@ -15,20 +15,31 @@
 		}
 	});
 
-	
+
+	$: {
+		categoria = $page.params.categoria;
+		setfiltrodefault();
+	}
 	$: storeanotaciones.setFiltro(filtro);
 	$: storeanotaciones.setOrden(orden);
-	$: categoria = $page.params.categoria;
+	let categoria: string;
+	
+
 	$: storeanotaciones.setcategoria(categoria);
 	$: listastored = storeanotaciones.lista;
 	$: lista = $listastored as Anotacion[];
-	
+
+	$: filtros = storeanotaciones.listafiltros;
+	$: listafiltros = $filtros;
 
 	let orden: Orden = 'asc';
 	let agregar: boolean = false;
 	let mostrarfiltros: boolean = false;
-	let filtro: FiltroEstado = '';
+	let filtro: typeof FiltroEstado[number] = 'todos';
 	$: mostrarfiltros = !!filtro && !filtro;
+	const setfiltrodefault = () => {
+		filtro = 'todos';
+	};
 </script>
 
 <div class="col-12 d-flex gap-2 justify-content-center mt-2">
@@ -50,7 +61,7 @@
 		<button class="btn" on:click={() => (mostrarfiltros = !mostrarfiltros)}>
 			<i class="bi bi-funnel" />
 		</button>
-		<button class="btn" on:click={() => (orden === 'asc' ? orden = 'desc' : orden = 'asc')}>
+		<button class="btn" on:click={() => (orden === 'asc' ? (orden = 'desc') : (orden = 'asc'))}>
 			{#if orden === 'asc'}
 				<i class="bi bi-arrow-up" />
 			{:else}
@@ -63,10 +74,9 @@
 				class="form-select form-select-sm"
 				aria-label=".form-select-sm example"
 			>
-				<option value="">todos</option>
-				<option value="pendientes">pendientes</option>
-				<option value="proximos">proximos</option>
-				<option value="vencidos">vencidos</option>
+				{#each listafiltros as filtro}
+					<option value={filtro.estado}>{filtro.estado} ({filtro.cantidad})</option>
+				{/each}
 			</select>
 		{/if}
 	</div>
