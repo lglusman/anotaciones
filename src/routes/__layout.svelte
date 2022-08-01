@@ -22,7 +22,10 @@
 	let mostrariracategoria = false;
 	beforeUpdate(() => {
 		cats = [...$storecategorias.sort((a, b) => a.categoria.localeCompare(b.categoria))];
-		catsir = [new Categoria({ id: '', categoria: 'Seleccione Categoria' }), ...cats];
+		let newc = new Categoria({ id: '', categoria: 'Seleccione Categoria' })
+		newc.id = '' 
+		catsir = [newc, ...cats];
+		console.log({cats, catsir})
 		if (paginanoincluyeanotaciones()) {
 			mostrariracategoria = true;
 			selectedcat = '';
@@ -57,6 +60,7 @@
 	<div class="container-fluid">
 		<a class="navbar-brand" href="/">
 			<img src={icon} alt="logo" class="rounded-circle" width="32" height="32" />
+			Notas - Renatita
 		</a>
 		<button
 			class="navbar-toggler"
@@ -126,8 +130,8 @@
 		margin-top: 70px;
 	}
 	.bgmenu {
-		background-color: #e9e8fc;
-		border-bottom: #dad9f8 solid 1px;
+		background-color: #cfecff;
+		border-bottom: #c0e4fc solid 2px;
 	}
 
 	.bgcanvas {

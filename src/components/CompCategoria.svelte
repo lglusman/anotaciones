@@ -38,13 +38,13 @@
 		<input class="form-control" type="text" bind:value={nuevacategoria.categoria} />
 	</div>
 	<div class="col-4">
-		{#if nuevacategoria.id !== ''}
-			<a href="/" class="btn btn-primary tbn" on:click|preventDefault={save}
+		{#if nuevacategoria.id}
+			<a href="/" class="btn bg-aceptar tbn" on:click|preventDefault={save}
 				><i class="bi bi-check" /></a
 			>
-			<a href="/" class="btn btn-danger" on:click|preventDefault={del}><i class="bi bi-trash" /></a>
+			<a href="/" class="btn bg-eliminar" on:click|preventDefault={del}><i class="bi bi-trash" /></a>
 		{:else}
-			<a href="/" class="btn btn-success tbn" on:click|preventDefault={save}
+			<a href="/" class="btn bg-aceptar tbn" on:click|preventDefault={save}
 				><i class="bi bi-plus" /></a
 			>
 		{/if}
@@ -54,5 +54,11 @@
 <style>
 	.bgcategs {
 		background-color: #cfecff;
+	}
+	.bg-aceptar {
+		background-color: #cffff5;
+	}
+	.bg-eliminar {
+		background-color: #ffcfcf;
 	}
 </style>

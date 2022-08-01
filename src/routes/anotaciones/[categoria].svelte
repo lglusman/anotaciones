@@ -5,7 +5,7 @@
 	import ListaAnotaciones from '../../components/ListaAnotaciones.svelte';
 	import { storeanotaciones } from '../../stores/anotaciones';
 	import { page } from '$app/stores';
-	import ComboCategorias from '../../components/ComboCategorias.svelte';
+	// import ComboCategorias from '../../components/ComboCategorias.svelte';
 	import type { Anotacion } from '../../entities/Anotacion';
 	import type { FiltroEstado, Orden } from '../../entities/types';
 
@@ -43,9 +43,9 @@
 
 </script>
 
-<div class="col-12 d-flex gap-2 justify-content-center mt-2">
+<!-- <div class="col-12 d-flex gap-2 justify-content-center mt-2">
 	<h2><ComboCategorias idcateg={categoria} disabled /></h2>
-</div>
+</div> -->
 <div class="row">
 	<div class="col-6">
 		<!-- svelte-ignore a11y-invalid-attribute -->

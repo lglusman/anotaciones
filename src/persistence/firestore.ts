@@ -39,17 +39,19 @@ async function Update(data: string, id: string, COLECTION: string) {
 // const q = query(collection(db, COLECTION), where('id', '==', id));
 
 async function GetOne(id: string, COLECTION: string): Promise<TypeData> {
+	console.log({id})
 	let ret: TypeData = { id: '', data: {} };
 	if (!id) return ret;
 	try {
 		const docRef = doc(db, COLECTION, id);
 		const docSnap = await getDoc(docRef);
 		if (docSnap.exists()) {
-			ret = { id: docSnap.id.toString(), data: docSnap.data() };
+			ret = { id: docSnap.id.toString(), data: docSnap.data().data };
 		}
 	} catch (error) {
 		console.error(error);
 	}
+	console.log(ret)
 	return ret;
 }
 

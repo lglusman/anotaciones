@@ -7,6 +7,8 @@
 
 	$: cat = Categoria.GetByid(idcateg || '')
 
+	$: console.log(idcateg)
+
 	const dispatch = createEventDispatcher();
 
 	function handlechange() {
