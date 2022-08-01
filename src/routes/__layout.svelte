@@ -1,5 +1,5 @@
 <script lang="ts">
-	import {  beforeUpdate } from 'svelte';
+	import { beforeUpdate } from 'svelte';
 	import { user } from '../stores/users';
 	import { storecategorias } from '../stores/categorias';
 	import { storeanotaciones } from '../stores/anotaciones';
@@ -9,7 +9,6 @@
 	import icon from '../assets/favicon.png';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
-
 
 	let selectedcat: string = '';
 
@@ -23,7 +22,7 @@
 	let mostrariracategoria = false;
 	beforeUpdate(() => {
 		cats = [...$storecategorias.sort((a, b) => a.categoria.localeCompare(b.categoria))];
-		catsir = [new Categoria('', 'Seleccione Categoria'), ...cats];
+		catsir = [new Categoria({ id: '', categoria: 'Seleccione Categoria' }), ...cats];
 		if (paginanoincluyeanotaciones()) {
 			mostrariracategoria = true;
 			selectedcat = '';
@@ -35,10 +34,10 @@
 
 	$: {
 		if ($user) {
-			Categoria.getAll().then((categorias) => {
+			Categoria.GetAll().then((categorias) => {
 				storecategorias.setear(categorias);
 			});
-			Anotacion.getAll().then((anotaciones) => {
+			Anotacion.GetAll().then((anotaciones) => {
 				storeanotaciones.setear(anotaciones);
 			});
 		}

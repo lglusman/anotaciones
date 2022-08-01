@@ -95,10 +95,10 @@ const createAnotaciones = () => {
 
 	return {
 		subscribe,
-		agregarAnotacion: (anotacion: Anotacion) => {
+		agregarAnotacion: (anotacion:Anotacion) => {
 			storeanotaciones.update((anotaciones) => [...anotaciones, anotacion]);
 		},
-		modificaranotacion: (anotacion: Anotacion) => {
+		modificaranotacion: (anotacion:Anotacion) => {
 			storeanotaciones.update((anotaciones) => {
 				const index = anotaciones.findIndex((a) => a.id === anotacion.id);
 				if (index === -1) {
@@ -107,7 +107,7 @@ const createAnotaciones = () => {
 				return [...anotaciones.slice(0, index), anotacion, ...anotaciones.slice(index + 1)];
 			});
 		},
-		setear: (anotaciones: Anotacion[]) => {
+		setear: (anotaciones:Anotacion[]) => {
 			storeanotaciones.set(anotaciones);
 		},
 		del: (id: string) => {

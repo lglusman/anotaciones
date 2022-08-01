@@ -1,32 +1,52 @@
-import { getAll, del } from '../persistence/firestore';
-import { Persistentable } from './Persistentable';
-// typescript class whit id: string and categoria: string
-// Language: typescript
-export class Categoria extends Persistentable {
+import { DALCategoria } from './DAL/DalCategoria';
+import { ValidationError } from './ValidationError';
+export class Categoria {
+	id: string | undefined;
 	categoria: string;
 
-  static collection = 'categorias';
-
-	constructor(id: string, categoria: string) {
-		super(id);
-		this.categoria = categoria;
+	constructor(_categoria: { id: string; categoria: string }) {
+		_categoria.id ? (this.id = _categoria.id) : (this.id = undefined);
+		this.categoria = _categoria.categoria;
 	}
 
-	private static list: Categoria[] | null = null;
+	// toDTO(): DTOCategoria {
+	// 	return new DTOCategoria({ id: this.id || '', categoria: this.categoria });
+	// }
 
-	static async getByid(id: string): Promise<Categoria | undefined> {
-		if (!Categoria.list) await Categoria.getAll();
-		const ret = Categoria.list?.find((x) => x.id === id);
-		return ret;
+	// static fromDTO(dto: DTOCategoria): Categoria {
+	// 	return new Categoria(dto);
+	// }
+
+	async Save(): Promise<void> {
+		this.ValidateSave();
+		await DALCategoria.Save(this);
 	}
 
-	static async getAll(): Promise<Categoria[]> {
-		const ret: Categoria[] = await getAll(Categoria.collection || '');
-		Categoria.list = ret;
-		return ret
+	static async GetAll(): Promise<Categoria[]> {
+		return await DALCategoria.GetAll();
 	}
 
-	static async delete(id: string): Promise<void> {
-		await del(Categoria.collection, id);
+	static async Delete(id: string): Promise<void> {
+		await DALCategoria.Del(id);
+	}
+
+	static async GetByid(id: string): Promise<Categoria> {
+		return DALCategoria.GetByid(id);
+	}
+
+	private ValidateSave(): void {
+		if (!this.categoria) {
+			throw new ValidationError('Categoria is required');
+		}
 	}
 }
+
+// export class DTOCategoria {
+// 	id: string;
+// 	categoria: string;
+
+// 	constructor(_categoria: { id: string; categoria: string }) {
+// 		this.id = _categoria.id;
+// 		this.categoria = _categoria.categoria;
+// 	}
+// }

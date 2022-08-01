@@ -9,3 +9,5 @@ export type FireQuery = {
 export const FiltroEstado = ['todos', 'pendientes', 'proximos', 'vencidos', 'realizados' ] as const;
 
 export type Orden = 'asc' | 'desc';
+
+export type TypeData = {id: string, data: object}

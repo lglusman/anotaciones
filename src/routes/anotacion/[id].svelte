@@ -15,39 +15,46 @@
 
 	$: idanotacion = $page.params.id;
 
-	let anotacion: Anotacion | undefined;
-	$: anotacion = $storeanotaciones && $storeanotaciones.find((x) => x.id === idanotacion);
-	let anotacioncomp: Anotacion  = new Anotacion(
-		'',
-		new Date(),
-		'',
-		'',
-		$user?.uid || '',
-		null,
-		null
-	);
-	$: {
-		if (anotacion) {
-			anotacioncomp =  { ...anotacion } as Anotacion;
-		}
-	}
+	let anotacion: Anotacion;
+	$: anotacion = $storeanotaciones && $storeanotaciones.find((x) => x.id === idanotacion) || new Anotacion({
+		id: '',
+		fechacreacion: new Date(),
+		descripcion: '',
+		categoria: '',
+		userid: $user?.uid || '',
+		fechaprevisto: null,
+		fecharealizado: null
+	});
+
+
+	// let anotacioncomp: Anotacion = new Anotacion({
+	// 	id: '',
+	// 	fechacreacion: new Date(),
+	// 	descripcion: '',
+	// 	categoria: '',
+	// 	userid: $user?.uid || '',
+	// 	fechaprevisto: null,
+	// 	fecharealizado: null
+	// });
+	// $: {
+	// 	if (anotacion) {
+	// 		anotacioncomp = { ...anotacion } as Anotacion;
+	// 	}
+	// }
 	const volver = () => {
-		goto(`/anotaciones/${anotacioncomp?.categoria}`, { replaceState: true });
+		goto(`/anotaciones/${anotacion?.categoria}`, { replaceState: true });
 	};
 </script>
 
 <h5 class="mt-2">
-	<button
-		class="btn btnvolver btn-sm"
-		on:click={volver}
+	<button class="btn btnvolver btn-sm" on:click={volver}
 		><i class="bi bi-arrow-return-left" /> Volver</button
 	>
 </h5>
-<CompAnotacion on:savedordeleted={volver} anotacion={anotacioncomp} />
+<CompAnotacion on:savedordeleted={volver} {anotacion} />
 
 <style>
 	.btnvolver {
 		background-color: #e5f1ff;
 	}
-	
 </style>

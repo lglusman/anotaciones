@@ -17,19 +17,27 @@
 	export let categoria: string = '';
 	export let agregar = false;
 
-	let newAnotacion: Anotacion = new Anotacion(
-		'',
-		new Date(),
-		'',
-		categoria,
-		$user?.uid || '',
-		null,
-		null
-	);
+	let newAnotacion: Anotacion = new Anotacion({
+		id: '',
+		fechacreacion: new Date(),
+		descripcion: '',
+		categoria: categoria,
+		userid: $user?.uid || '',
+		fechaprevisto: null,
+		fecharealizado: null
+	});
 
 	$: {
 		agregar = agregar;
-		newAnotacion = new Anotacion('', new Date(), '', categoria, $user?.uid || '', null, null);
+		newAnotacion = new Anotacion({
+			id: '',
+			fechacreacion: new Date(),
+			descripcion: '',
+			categoria: categoria,
+			userid: $user?.uid || '',
+			fechaprevisto: null,
+			fecharealizado: null
+		});
 	}
 
 	const toDDMMYYYY = (date: string) => {
@@ -40,12 +48,13 @@
 		if (dd.length < 2) dd = '0' + dd;
 		if (mm.length < 2) mm = '0' + mm;
 		return dd + '/' + mm + '/' + yyyy;
+		// return date;
 	};
 
 	$: newAnotacion.categoria = categoria;
 
-	const handleclickanotacion = (id: string) => {
-		goto(`/anotacion/${id}`, { replaceState: true });
+	const handleclickanotacion = (anot: Anotacion) => {
+		goto(`/anotacion/${anot.id}`, { replaceState: true });
 	};
 </script>
 
@@ -64,7 +73,7 @@
 							<a
 								href="#"
 								class="btn btn-sm btn-link link-dark"
-								on:click={() => handleclickanotacion(anotacion.id || '')}
+								on:click={() => handleclickanotacion(anotacion)}
 								><i class="bi bi-pencil" /></a
 							>
 						</h5>
@@ -72,15 +81,11 @@
 						<div class="row">
 							<div class="col-6 card-text fw-light">
 								<i class="bi bi-calendar3" />
-								{anotacion.fechaprevisto
-									? toDDMMYYYY(anotacion.fechaprevisto.toString())
-									: 'Sin Programar'}
+								{anotacion.fechaprevisto ? toDDMMYYYY(anotacion.fechaprevisto.toString()) : 'Sin Programar'}
 							</div>
 							<div class="col-6 card-text text-end fw-light">
 								<i class="bi bi-calendar-check" />
-								{anotacion.fecharealizado
-									? toDDMMYYYY(anotacion.fecharealizado.toString())
-									: 'Pendiente'}
+								{anotacion.fecharealizado ? toDDMMYYYY(anotacion.fecharealizado.toString()) : 'Pendiente'}
 							</div>
 						</div>
 					</div>

@@ -5,7 +5,7 @@
 	export let idcateg: string = '';
 	export let disabled: boolean = false;
 
-	$: cat = Categoria.getByid(idcateg);
+	$: cat = Categoria.GetByid(idcateg || '')
 
 	const dispatch = createEventDispatcher();
 
@@ -23,6 +23,6 @@
 	</select>
 {:else}
 	{#await cat then cate}
-		{cate?.categoria || ''}
+		{cate?.categoria }
 	{/await}
 {/if}

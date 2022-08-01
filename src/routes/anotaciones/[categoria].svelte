@@ -40,6 +40,7 @@
 	const setfiltrodefault = () => {
 		filtro = 'todos';
 	};
+
 </script>
 
 <div class="col-12 d-flex gap-2 justify-content-center mt-2">

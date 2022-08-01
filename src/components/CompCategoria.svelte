@@ -4,13 +4,13 @@
 	import { storecategorias } from '../stores/categorias';
 
 	import { Categoria } from '../entities/Categoria';
-	export let cat: Categoria = new Categoria('', '');
+	export let cat: Categoria = new Categoria({id:'', categoria: ''});
 
-	let nuevacategoria = new Categoria(cat.id || '', cat.categoria);
+	let nuevacategoria = new Categoria({id: cat.id || '',categoria: cat.categoria});
 
 	const del = async () => {
 		if (confirm('¿Está seguro de eliminar esta categoría?')) {
-			await Categoria.delete(nuevacategoria.id || '');
+			await Categoria.Delete(nuevacategoria.id || '');
 			storecategorias.del(nuevacategoria.id || '');
 			// await tick();
 			//
@@ -19,11 +19,11 @@
 
 	const save = async () => {
 		try {
-			await nuevacategoria.doSave(Categoria.collection);
+			await nuevacategoria.Save();
 			if ($storecategorias.findIndex((c) => c.id == nuevacategoria.id) == -1) {
 				storecategorias.agregarCategoria(nuevacategoria);
 				await tick;
-				nuevacategoria = new Categoria('', '');
+				nuevacategoria = new Categoria({id:'', categoria: ''});
 			} else {
 				storecategorias.actualizarCategoria(nuevacategoria);
 			}

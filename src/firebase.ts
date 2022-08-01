@@ -44,7 +44,7 @@ const loginconpopup = async () => {
 		// let token = credential.accessToken
 		user.setUser(result.user);
 	} catch (error) {
-		console.log(error);
+		console.error(error);
 	}
 };
 onAuthStateChanged(auth, (authUser) => {

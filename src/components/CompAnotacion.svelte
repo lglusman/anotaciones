@@ -3,26 +3,13 @@
 	import { createEventDispatcher, tick } from 'svelte';
 	import { user } from '../stores/users';
 	import { storeanotaciones } from '../stores/anotaciones';
+	import { ValidationError } from '../entities/ValidationError';
 
 	const dispatch = createEventDispatcher();
 
-	export let anotacion: Anotacion = new Anotacion(
-		'',
-		new Date(),
-		'',
-		'',
-		$user?.uid || '',
-		null,
-		null
-	);
-	export let alta: boolean = false;
+	export let anotacion: Anotacion;
 
-	const actualizarAnotacion = () => {
-		if (!alta && anotacion.id) {
-			guardaranotacion();
-			dispatch('saved', null);
-		}
-	};
+	export let alta: boolean = false;
 
 	const handleguardar = () => {
 		guardaranotacion();
@@ -31,16 +18,16 @@
 
 	const guardaranotacion = async () => {
 		try {
-			let anot = new Anotacion(
-				anotacion.id || '',
-				anotacion.fechacreacion,
-				anotacion.descripcion,
-				anotacion.categoria,
-				anotacion.userid,
-				anotacion.fechaprevisto,
-				anotacion.fecharealizado
-			);
-			await anot.doSave(Anotacion.collection);
+			let anot = new Anotacion({
+				id: anotacion.id || '',
+				fechacreacion: anotacion.fechacreacion,
+				descripcion: anotacion.descripcion,
+				categoria: anotacion.categoria,
+				userid: anotacion.userid,
+				fechaprevisto: anotacion.fechaprevisto,
+				fecharealizado: anotacion.fecharealizado
+			});
+			await anot.Save();
 			dispatch('saved', null);
 			if (alta) {
 				storeanotaciones.agregarAnotacion(anot);
@@ -55,17 +42,29 @@
 				anotacion.categoria = '';
 			}
 		} catch (error) {
-			console.error(error);
+			if (error instanceof ValidationError) {
+				alert(error.message);
+			} else {
+				console.error(error);
+			}
 		}
 	};
 
 	const del = async () => {
 		if (confirm('¿Está seguro de eliminar esta nota?')) {
 			storeanotaciones.del(anotacion.id || '');
-			await Anotacion.delete(anotacion.id || '');
+			await Anotacion.Delete(anotacion.id || '');
 			await tick();
 			dispatch('savedordeleted', null);
-			anotacion = new Anotacion('', new Date(), '', '', $user?.uid || '', null, null);
+			anotacion = new Anotacion({
+				id: '',
+				fechacreacion: new Date(),
+				descripcion: '',
+				categoria: '',
+				userid: $user?.uid || '',
+				fechaprevisto: null,
+				fecharealizado: null
+			});
 		}
 	};
 </script>
@@ -113,13 +112,13 @@
 			</div>
 		</div>
 		<div class="col-6 col-md-2">
-				<button on:click|preventDefault={handleguardar} class="btn bg-aceptar" type="submit"
-					><i class="bi bi-check2" /></button
-				>
+			<button on:click|preventDefault={handleguardar} class="btn bg-aceptar" type="submit"
+				><i class="bi bi-check2" /></button
+			>
 			{#if anotacion.id !== ''}
-					<button on:click|preventDefault={del} class="btn bg-eliminar" type="submit"
-						><i class="bi bi-trash" /></button
-					>
+				<button on:click|preventDefault={del} class="btn bg-eliminar" type="submit"
+					><i class="bi bi-trash" /></button
+				>
 			{/if}
 		</div>
 	</div>

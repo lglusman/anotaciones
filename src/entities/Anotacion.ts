@@ -1,110 +1,118 @@
-import { getMany, getAll, del } from '../persistence/firestore';
-import { Persistentable } from './Persistentable';
-import type { FireQuery } from './types';
+import { DALAnotacion } from './DAL/DalAnotacion';
+import { ValidationError } from './ValidationError';
 
-export class Anotacion extends Persistentable {
-  static collection = 'anotaciones';
-
+export class Anotacion {
+	id: string | undefined;
 	fechacreacion: Date;
 	descripcion: string;
 	categoria: string;
 	fechaprevisto: Date | null = null;
-	fecharealizado: Date | null = null; 
+	fecharealizado: Date | null = null;
 	userid: string;
-	constructor(
-		id: string,
-		fechacreacion: Date,
-		descripcion: string,
-		categoria: string,
-		userid: string,
-		fechaprevisto: Date | null,
-		fecharealizado: Date | null,
-	) {
-		super(id);
-		this.fechacreacion = fechacreacion;
-		this.descripcion = descripcion;
-		this.categoria = categoria;
-		this.fechaprevisto = fechaprevisto ? fechaprevisto : null;
-		this.fecharealizado = fecharealizado ? fecharealizado : null;
-		this.userid = userid;
+
+	constructor(_anotacion: {
+		id: string;
+		fechacreacion: Date;
+		descripcion: string;
+		categoria: string;
+		userid: string;
+		fechaprevisto: Date | null;
+		fecharealizado: Date | null;
+	}) {
+		this.id = _anotacion.id;
+		this.fechacreacion = _anotacion.fechacreacion;
+		this.descripcion = _anotacion.descripcion;
+		this.categoria = _anotacion.categoria;
+		this.fechaprevisto = _anotacion.fechaprevisto;
+		this.fecharealizado = _anotacion.fecharealizado;
+		this.userid = _anotacion.userid;
 	}
 
-	static async getAllByCategory(category: string): Promise<Anotacion[]> {
-		const q : FireQuery = {
-			field: "categoria",
-			opStr: "==",
-			value: category
-		}
-		return await getMany<Anotacion>(Anotacion.collection || '', q);
-	}
+	// toDTO(): DTOAnotacion {
+	// 	return new DTOAnotacion({
+	// 		id: this.id || '',
+	// 		fechacreacion: this.fechacreacion.toLocaleDateString('en-US'),
+	// 		descripcion: this.descripcion,
+	// 		categoria: this.categoria,
+	// 		fechaprevisto: this.fechaprevisto ? this.fechaprevisto.toLocaleDateString('en-US') : '',
+	// 		fecharealizado: this.fecharealizado ? this.fecharealizado.toLocaleDateString('en-US') : '',
+	// 		userid: this.userid
+	// 	});
+	// }
 
-	static async getAll(): Promise<Anotacion[]> {
-		return await getAll(Anotacion.collection || '');
-	}
+	// static fromDTO(dto: DTOAnotacion): Anotacion {
+	// 	return new Anotacion({
+	// 		id: dto.id,
+	// 		fechacreacion: new Date(dto.fechacreacion),
+	// 		descripcion: dto.descripcion,
+	// 		categoria: dto.categoria,
+	// 		userid: dto.userid,
+	// 		fechaprevisto: dto.fechaprevisto ? new Date(dto.fechaprevisto) : null,
+	// 		fecharealizado: dto.fecharealizado ? new Date(dto.fecharealizado) : null
+	// 	});
+	// }
 
 	
-	static async delete(id: string): Promise<void> {
-		await del(Anotacion.collection, id);
+	async Save(): Promise<void> {
+		this.ValidateSave();
+		await DALAnotacion.Save(this);
 	}
 
+	static async GetAllByCategory(category: string): Promise<Anotacion[]> {
+		return await DALAnotacion.getAllByCategory(category);
+	}
+
+
+	static async GetAll(): Promise<Anotacion[]> {
+		return await DALAnotacion.GetAll();
+	}
+	static async Delete(id: string): Promise<void> {
+		await DALAnotacion.Delete(id);
+	}
+
+	private ValidateSave(): void  {
+		let validError = '';
+		if (!this.descripcion) {
+			validError += '* La descripcion es requerida';
+		}
+		if (!this.categoria) {
+			validError += '* La categoria es requerida';
+		}
+		if (!this.fechacreacion) {
+			validError += '* la fechacreacion es requerida';
+		}
+		if (!this.userid) {
+			validError += '* Userid es requerido';
+		}
+		if (validError) {
+			throw new ValidationError(validError); // Custom error creado por mi
+		}
+	}
 }
 
-
-// class DALAnotacion {
-//   // static getAll(): Promise<Anotacion[]> {
-//   //   return new Promise((resolve, reject) => {
-//   //     db.all("SELECT * FROM anotacion", (err, rows) => {
-//   //       if (err) {
-//   //         reject(err);
-//   //       } else {
-//   //         resolve(rows);
-//   //       }
-//   //     });
-//   //   });
-//   // }
-
-//   // static getById(id: number): Promise<Anotacion> {
-//   //   return new Promise((resolve, reject) => {
-//   //     db.get(
-//   //       "SELECT * FROM anotacion WHERE id = ?",
-//   //       [id],
-//   //       (err, row) => {
-//   //         if (err) {
-//   //           reject(err);
-//   //         } else {
-//   //           resolve(row);
-//   //         }
-//   //       }
-//   //     );
-//   //   });
-//   // }
-
-//   // static getByUserId(userid: string): Promise<Anotacion[]> {
-//   //   return new Promise((resolve, reject) => {
-//   //     db.all(
-//   //       "SELECT * FROM anotacion WHERE userid = ?",
-//   //       [userid],
-//   //       (err, rows) => {
-//   //         if (err) {
-//   //           reject(err);
-//   //         } else {
-//   //           resolve(rows);
-//   //         }
-//   //       }
-//   //     );
-//   //   });
-//   // }
-
-//   // static getByCategoria(categoria: string): Promise<Anotacion[]> {
-//   //   return new Promise((resolve, reject) => {
-//   //     db.all(
-//   //       "SELECT * FROM anotacion WHERE categoria = ?",
-//   //       [categoria],
-//   //       (err, rows) => {
-//   //         if (err) {
-//   //           reject(err);
-//   //         } else {
-//   //           resolve(rows);
-//   //         } else {  reject(err); }  
-
+// export class DTOAnotacion {
+// 	id: string;
+// 	fechacreacion: string;
+// 	descripcion: string;
+// 	categoria: string;
+// 	fechaprevisto: string;
+// 	fecharealizado: string;
+// 	userid: string;
+// 	constructor(_anotacion: {
+// 		id: string;
+// 		fechacreacion: string;
+// 		descripcion: string;
+// 		categoria: string;
+// 		userid: string;
+// 		fechaprevisto: string;
+// 		fecharealizado: string;
+// 	}) {
+// 		this.id = _anotacion.id;
+// 		this.fechacreacion = _anotacion.fechacreacion;
+// 		this.descripcion = _anotacion.descripcion;
+// 		this.categoria = _anotacion.categoria;
+// 		this.fechaprevisto = _anotacion.fechaprevisto;
+// 		this.fecharealizado = _anotacion.fecharealizado;
+// 		this.userid = _anotacion.userid;
+// 	}
 // }
