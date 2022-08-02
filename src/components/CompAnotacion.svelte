@@ -4,6 +4,7 @@
 	import { user } from '../stores/users';
 	import { storeanotaciones } from '../stores/anotaciones';
 	import { ValidationError } from '../entities/ValidationError';
+import { alerta } from '../alert/alerta';
 
 	const dispatch = createEventDispatcher();
 
@@ -43,7 +44,7 @@
 			}
 		} catch (error) {
 			if (error instanceof ValidationError) {
-				alert(error.message);
+				alerta({message: error.message});
 			} else {
 				console.error(error);
 			}

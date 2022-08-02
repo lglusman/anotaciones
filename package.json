@@ -32,6 +32,7 @@
 	"dependencies": {
 		"firebase": "^9.9.1",
 		"svelte": "^3.49.0",
-		"sveltestrap": "^5.9.0"
+		"sveltestrap": "^5.9.0",
+		"sweetalert2": "^11.4.24"
 	}
 }
