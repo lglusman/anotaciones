@@ -5,7 +5,6 @@
 	import ListaAnotaciones from '../../components/ListaAnotaciones.svelte';
 	import { storeanotaciones } from '../../stores/anotaciones';
 	import { page } from '$app/stores';
-	// import ComboCategorias from '../../components/ComboCategorias.svelte';
 	import type { Anotacion } from '../../entities/Anotacion';
 	import type { FiltroEstado, Orden } from '../../entities/types';
 
@@ -15,7 +14,6 @@
 		}
 	});
 
-
 	$: {
 		categoria = $page.params.categoria;
 		setfiltrodefault();
@@ -23,7 +21,6 @@
 	$: storeanotaciones.setFiltro(filtro);
 	$: storeanotaciones.setOrden(orden);
 	let categoria: string;
-	
 
 	$: storeanotaciones.setcategoria(categoria);
 	$: listastored = storeanotaciones.lista;
@@ -40,28 +37,34 @@
 	const setfiltrodefault = () => {
 		filtro = 'todos';
 	};
-
 </script>
 
-<!-- <div class="col-12 d-flex gap-2 justify-content-center mt-2">
-	<h2><ComboCategorias idcateg={categoria} disabled /></h2>
-</div> -->
 <div class="row">
-	<div class="col-6">
-		<!-- svelte-ignore a11y-invalid-attribute -->
-		<a href="#" class="btn bgadd" on:click={() => (agregar = !agregar)}>
-			{#if !agregar}
-				<i class="bi bi-plus-lg" />
-			{:else}
-				<i class="bi bi-dash-lg" />
-			{/if}
-		</a>
-		<div class="mx-1 text-capitalize">{filtro}</div>
+	<div class="col-2">
+		{#if categoria !== 'ALL'}
+			<!-- content here -->
+			<!-- svelte-ignore a11y-invalid-attribute -->
+			<a href="#" class="btn bgadd" on:click={() => (agregar = !agregar)}>
+				{#if !agregar}
+					<i class="bi bi-plus-lg" />
+				{:else}
+					<i class="bi bi-dash-lg" />
+				{/if}
+			</a>
+		{/if}
 	</div>
-	<div class="col-6 text-end">
+	<div class="col-10 text-end">
 		<button class="btn" on:click={() => (mostrarfiltros = !mostrarfiltros)}>
 			<i class="bi bi-funnel" />
 		</button>
+
+		{#if mostrarfiltros}
+			<select bind:value={filtro} class="bgselect" aria-label=".form-select-sm example">
+				{#each listafiltros as filtro}
+					<option value={filtro.estado}>{filtro.estado} ({filtro.cantidad})</option>
+				{/each}
+			</select>
+		{/if}
 		<button class="btn" on:click={() => (orden === 'asc' ? (orden = 'desc') : (orden = 'asc'))}>
 			{#if orden === 'asc'}
 				<i class="bi bi-arrow-up" />
@@ -69,34 +72,22 @@
 				<i class="bi bi-arrow-down" />
 			{/if}
 		</button>
-		{#if mostrarfiltros}
-			<select
-				bind:value={filtro}
-				class="bgselect"
-				aria-label=".form-select-sm example"
-			>
-				{#each listafiltros as filtro}
-					<option value={filtro.estado}>{filtro.estado} ({filtro.cantidad})</option>
-				{/each}
-			</select>
-		{/if}
 	</div>
 </div>
+
+Cant: {lista.length}
+{#if filtro !== 'todos'}
+		<span class="mx-1 text-capitalize text-primary">{filtro}</span>
+		<button class="btn btn-sm link-primary" on:click={() => (filtro = 'todos')}>
+			<i class="bi bi-x-lg" />
+		</button>
+{/if}
+
 <ListaAnotaciones {agregar} anotaciones={lista} {categoria} on:saved={() => (agregar = false)} />
 
 <style>
 	.bgadd {
 		background-color: #b7f5ad;
 		border: #abdda3 solid 1px;
-	}
-	.bgselect {
-		background-color: #e8f5fc;
-		border: 1px solid #ced4da;
-		border-radius: 0.25rem;
-		color: #495057;
-		font-size: 1rem;
-		height: calc(2rem + 2px);
-		line-height: 1.5;
-		padding-left: 0.5rem;
 	}
 </style>

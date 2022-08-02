@@ -4,7 +4,7 @@
 	import { user } from '../stores/users';
 	import { storeanotaciones } from '../stores/anotaciones';
 	import { ValidationError } from '../entities/ValidationError';
-import { alerta } from '../alert/alerta';
+	import { alerta } from '../alert/alerta';
 
 	const dispatch = createEventDispatcher();
 
@@ -44,14 +44,12 @@ import { alerta } from '../alert/alerta';
 			}
 		} catch (error) {
 			if (error instanceof ValidationError) {
-				alerta({message: error.message});
+				alerta({ message: error.message });
 			} else {
 				console.error(error);
 			}
 		}
 	};
-	const onFocus = (e: { target: { type: string } }) => (e.target.type = 'date');
-	const onBlur = (e: { target: { type: string } }) => (e.target.type = 'text');
 
 	const del = async () => {
 		if (confirm('¿Está seguro de eliminar esta nota?')) {

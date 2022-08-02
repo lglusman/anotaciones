@@ -9,6 +9,7 @@
 	import icon from '../assets/favicon.png';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
+	import ComboCategorias from '../components/ComboCategorias.svelte';
 
 	let selectedcat: string = '';
 
@@ -20,11 +21,8 @@
 	};
 
 	let mostrariracategoria = false;
+
 	beforeUpdate(() => {
-		cats = [...$storecategorias.sort((a, b) => a.categoria.localeCompare(b.categoria))];
-		let newc = new Categoria({ id: '', categoria: 'Seleccione Categoria' })
-		newc.id = '' 
-		catsir = [newc, ...cats];
 		if (paginanoincluyeanotaciones()) {
 			mostrariracategoria = true;
 			selectedcat = '';
@@ -51,8 +49,6 @@
 			goto(`/anotaciones/${selectedcat}`, { replaceState: true });
 		}
 	}
-	let cats: Categoria[] = [];
-	let catsir: Categoria[] = [];
 </script>
 
 <nav class="navbar fixed-top bgmenu">
@@ -105,7 +101,7 @@
 	</div>
 </nav>
 <div class="container-fluid cont">
-	{#if $storecategorias && $user && !mostrariracategoria}
+	<!-- {#if $storecategorias && $user && !mostrariracategoria}
 		Categoria:
 		<select class="bgselect" bind:value={selectedcat}>
 			{#each cats as categoria}
@@ -121,7 +117,12 @@
 				
 			{/each}
 			</select>
-	{/if}
+	{/if} -->
+	<div class="row">
+		<div class="col-12">
+			<ComboCategorias bind:idcateg={selectedcat} {mostrariracategoria} />
+		</div>
+	</div>
 	<slot />
 </div>
 
@@ -136,15 +137,5 @@
 
 	.bgcanvas {
 		background-color: #f6fce8;
-	}
-	.bgselect {
-		background-color: #e8f5fc;
-		border: 1px solid #ced4da;
-		border-radius: 0.25rem;
-		color: #495057;
-		font-size: 1rem;
-		height: calc(2rem + 2px);
-		line-height: 1.5;
-		padding-left: 0.5rem;
 	}
 </style>

@@ -18,11 +18,11 @@ const createAnotaciones = () => {
 		orden: 'desc'
 	});
 
-	
-
 	const listafiltrada = derived([storeanotaciones, filtros], ($values, set) => {
 		let lista = [...$values[0]];
-		lista = lista.filter((a) => a.categoria === $values[1].categoria);
+		if ($values[1].categoria !== 'ALL') {
+			lista = lista.filter((a) => a.categoria === $values[1].categoria);
+		}
 		if ($values[1].estado === 'proximos') {
 			lista = lista.filter(
 				(a) =>
@@ -42,6 +42,9 @@ const createAnotaciones = () => {
 		if ($values[1].estado === 'pendientes') {
 			lista = lista.filter((a) => !a.fecharealizado);
 		}
+		if ($values[1].estado === 'realizados') {
+			lista = lista.filter((a) => a.fecharealizado);
+		}
 		if ($values[1].orden === 'desc') {
 			lista.sort((a, b) => {
 				return (a.fechaprevisto || 'zzz') < (b.fechaprevisto || 'zzz') ? 1 : -1;
@@ -57,8 +60,10 @@ const createAnotaciones = () => {
 
 	const listaFiltros = derived([storeanotaciones, filtros], ($values) => {
 		const storeaFiltros: { estado: typeof FiltroEstado[number]; cantidad: number }[] = [];
-		let lista = [...$values[0]] 
-		lista = lista.filter((a) => a.categoria === $values[1].categoria);
+		let lista = [...$values[0]];
+		if ($values[1].categoria !== 'ALL') {
+			lista = lista.filter((a) => a.categoria === $values[1].categoria);
+		}
 		storeaFiltros[0] = {
 			estado: 'todos',
 			cantidad: [...lista].length
@@ -88,17 +93,17 @@ const createAnotaciones = () => {
 		storeaFiltros[4] = {
 			estado: 'realizados',
 			cantidad: [...lista].filter((a) => a.fecharealizado).length
-		}
-		
-		return storeaFiltros
+		};
+
+		return storeaFiltros;
 	});
 
 	return {
 		subscribe,
-		agregarAnotacion: (anotacion:Anotacion) => {
+		agregarAnotacion: (anotacion: Anotacion) => {
 			storeanotaciones.update((anotaciones) => [...anotaciones, anotacion]);
 		},
-		modificaranotacion: (anotacion:Anotacion) => {
+		modificaranotacion: (anotacion: Anotacion) => {
 			storeanotaciones.update((anotaciones) => {
 				const index = anotaciones.findIndex((a) => a.id === anotacion.id);
 				if (index === -1) {
@@ -107,7 +112,7 @@ const createAnotaciones = () => {
 				return [...anotaciones.slice(0, index), anotacion, ...anotaciones.slice(index + 1)];
 			});
 		},
-		setear: (anotaciones:Anotacion[]) => {
+		setear: (anotaciones: Anotacion[]) => {
 			storeanotaciones.set(anotaciones);
 		},
 		del: (id: string) => {

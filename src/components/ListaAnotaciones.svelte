@@ -6,8 +6,12 @@
 	import { goto } from '$app/navigation';
 	import { slide } from 'svelte/transition';
 	import { quintOut } from 'svelte/easing';
+	import { storecategorias } from '../stores/categorias';
 
 	export let anotaciones: Anotacion[] = [];
+
+	$: nrocategorias = [...new Map(anotaciones.map((x) => [x.categoria, x])).values()].length;
+	$: console.log(nrocategorias);
 
 	const dispatch = createEventDispatcher();
 
@@ -56,6 +60,11 @@
 	const handleclickanotacion = (anot: Anotacion) => {
 		goto(`/anotacion/${anot.id}`, { replaceState: true });
 	};
+
+	const NombreCategoria = (categoria: string) => {
+		let cat = $storecategorias.find((x) => x.id == categoria);
+		return cat?.categoria || categoria;
+	};
 </script>
 
 {#if agregar}
@@ -67,25 +76,31 @@
 			<div class="col-12 gy-2">
 				<div class="card {index % 2 === 0 ? 'card1' : 'card2'} border-0 shadow">
 					<div class="card-body">
-						<!-- svelte-ignore a11y-invalid-attribute -->
+						{#if nrocategorias > 1}
+						<div class="">{NombreCategoria(anotacion.categoria)}</div>
+						{/if}
 						<h5 class="card-title">
 							{anotacion.descripcion}
+							<!-- svelte-ignore a11y-invalid-attribute -->
 							<a
 								href="#"
 								class="btn btn-sm btn-link link-dark"
-								on:click={() => handleclickanotacion(anotacion)}
-								><i class="bi bi-pencil" /></a
+								on:click={() => handleclickanotacion(anotacion)}><i class="bi bi-pencil" /></a
 							>
 						</h5>
 						<hr />
 						<div class="row">
 							<div class="col-6 card-text fw-light">
 								<i class="bi bi-calendar3" />
-								{anotacion.fechaprevisto ? toDDMMYYYY(anotacion.fechaprevisto.toString()) : 'Sin Programar'}
+								{anotacion.fechaprevisto
+									? toDDMMYYYY(anotacion.fechaprevisto.toString())
+									: 'Sin Programar'}
 							</div>
 							<div class="col-6 card-text text-end fw-light">
 								<i class="bi bi-calendar-check" />
-								{anotacion.fecharealizado ? toDDMMYYYY(anotacion.fecharealizado.toString()) : 'Pendiente'}
+								{anotacion.fecharealizado
+									? toDDMMYYYY(anotacion.fecharealizado.toString())
+									: 'Pendiente'}
 							</div>
 						</div>
 					</div>
