@@ -25,7 +25,6 @@
 		let newc = new Categoria({ id: '', categoria: 'Seleccione Categoria' })
 		newc.id = '' 
 		catsir = [newc, ...cats];
-		console.log({cats, catsir})
 		if (paginanoincluyeanotaciones()) {
 			mostrariracategoria = true;
 			selectedcat = '';
@@ -114,13 +113,14 @@
 			{/each}
 		</select>
 	{/if}
-	{#if mostrariracategoria}
+	{#if mostrariracategoria && $user }
 		Categoria:
 		<select class="bgselect" bind:value={selectedcat}>
 			{#each catsir as categoria}
 				<option value={categoria.id}>{categoria.categoria}</option>
+				
 			{/each}
-		</select>
+			</select>
 	{/if}
 	<slot />
 </div>

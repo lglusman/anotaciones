@@ -72,7 +72,7 @@
 		{#if mostrarfiltros}
 			<select
 				bind:value={filtro}
-				class="form-select form-select-sm"
+				class="bgselect"
 				aria-label=".form-select-sm example"
 			>
 				{#each listafiltros as filtro}
@@ -88,5 +88,15 @@
 	.bgadd {
 		background-color: #b7f5ad;
 		border: #abdda3 solid 1px;
+	}
+	.bgselect {
+		background-color: #e8f5fc;
+		border: 1px solid #ced4da;
+		border-radius: 0.25rem;
+		color: #495057;
+		font-size: 1rem;
+		height: calc(2rem + 2px);
+		line-height: 1.5;
+		padding-left: 0.5rem;
 	}
 </style>

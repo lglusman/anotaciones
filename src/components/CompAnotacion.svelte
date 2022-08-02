@@ -49,6 +49,8 @@
 			}
 		}
 	};
+	const onFocus = (e: { target: { type: string } }) => (e.target.type = 'date');
+	const onBlur = (e: { target: { type: string } }) => (e.target.type = 'text');
 
 	const del = async () => {
 		if (confirm('¿Está seguro de eliminar esta nota?')) {
@@ -71,45 +73,38 @@
 
 <form>
 	<div class="row gx-2 align-items-end bg-anotacion py-1 rounded">
-		<div class="col-12 col-md-6">
-			<div class="form-floating">
-				<input
-					id="descripcion"
-					bind:value={anotacion.descripcion}
-					class="form-control"
-					type="text"
-					placeholder="Descripción"
-					name="descripcion"
-					required
-				/>
-				<label for="descripcion">Descripción</label>
-			</div>
+		<div class="col-12 col-md-12">
+			<input
+				id="descripcion"
+				bind:value={anotacion.descripcion}
+				class="fc-anotacion"
+				type="text"
+				placeholder="Descripción"
+				name="descripcion"
+				required
+			/>
 		</div>
-		<div class="col-6 col-md-2">
-			<div class="form-floating">
-				<input
-					bind:value={anotacion.fechaprevisto}
-					class="form-control"
-					type="date"
-					placeholder="Fecha Previsto"
-					name="fechaprevisto"
-					id="fechaprevisto"
-				/>
-				<label for="fechaprevisto">Fecha Previsto</label>
-			</div>
+		<div class="col-6 col-md-6">
+			<p class="fw-light m-0">fecha previsto</p>
+			<input
+				bind:value={anotacion.fechaprevisto}
+				class="fc-anotacion"
+				type="date"
+				placeholder="Fecha Previsto"
+				name="fechaprevisto"
+				id="fechaprevisto"
+			/>
 		</div>
-		<div class="col-6 col-md-2">
-			<div class="form-floating">
-				<input
-					bind:value={anotacion.fecharealizado}
-					class="form-control"
-					type="date"
-					placeholder="Fecha Previsto"
-					name="fecharealizado"
-					id="fecharealizado"
-				/>
-				<label for="fecharealizado">Fecha Realizado</label>
-			</div>
+		<div class="col-6 col-md-6">
+			<p class="fw-light m-0">fecha realizado</p>
+			<input
+				bind:value={anotacion.fecharealizado}
+				class="fc-anotacion"
+				type="date"
+				placeholder="Fecha Previsto"
+				name="fecharealizado"
+				id="fecharealizado"
+			/>
 		</div>
 		<div class="col-6 col-md-2">
 			<button on:click|preventDefault={handleguardar} class="btn bg-aceptar" type="submit"
@@ -125,6 +120,20 @@
 </form>
 
 <style>
+	.fc-anotacion {
+		background-color: #cfedff;
+		border: 1px solid #b3b1b1;
+		border-radius: 5px;
+		width: 100%;
+		margin: 2px 0;
+		padding: 0.35rem;
+	}
+
+	.fc-anotacion:focus {
+		border: 1px solid #5f5f5f;
+		outline: none;
+	}
+
 	.bg-anotacion {
 		background-color: #cfedff;
 	}

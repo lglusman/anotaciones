@@ -16,33 +16,32 @@
 	$: idanotacion = $page.params.id;
 
 	let anotacion: Anotacion;
-	$: anotacion = $storeanotaciones && $storeanotaciones.find((x) => x.id === idanotacion) || new Anotacion({
-		id: '',
-		fechacreacion: new Date(),
-		descripcion: '',
-		categoria: '',
-		userid: $user?.uid || '',
-		fechaprevisto: null,
-		fecharealizado: null
-	});
+	$: anotacion =
+		($storeanotaciones && $storeanotaciones.find((x) => x.id === idanotacion)) ||
+		new Anotacion({
+			id: '',
+			fechacreacion: new Date(),
+			descripcion: '',
+			categoria: '',
+			userid: $user?.uid || '',
+			fechaprevisto: null,
+			fecharealizado: null
+		});
+
+		let categvolver = ''
+
+		$: {
+			if (anotacion.categoria) {
+				categvolver = anotacion.categoria
+			}
+		}
+		
 
 
-	// let anotacioncomp: Anotacion = new Anotacion({
-	// 	id: '',
-	// 	fechacreacion: new Date(),
-	// 	descripcion: '',
-	// 	categoria: '',
-	// 	userid: $user?.uid || '',
-	// 	fechaprevisto: null,
-	// 	fecharealizado: null
-	// });
-	// $: {
-	// 	if (anotacion) {
-	// 		anotacioncomp = { ...anotacion } as Anotacion;
-	// 	}
-	// }
 	const volver = () => {
-		goto(`/anotaciones/${anotacion?.categoria}`, { replaceState: true });
+		console.log(categvolver)
+		// goto(`/anotaciones/${anotacion?.categoria}`, { replaceState: true });
+		goto(`/anotaciones/${categvolver}`, { replaceState: true });
 	};
 </script>
 

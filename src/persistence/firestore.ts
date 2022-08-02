@@ -39,7 +39,6 @@ async function Update(data: string, id: string, COLECTION: string) {
 // const q = query(collection(db, COLECTION), where('id', '==', id));
 
 async function GetOne(id: string, COLECTION: string): Promise<TypeData> {
-	console.log({id})
 	let ret: TypeData = { id: '', data: {} };
 	if (!id) return ret;
 	try {
@@ -51,7 +50,6 @@ async function GetOne(id: string, COLECTION: string): Promise<TypeData> {
 	} catch (error) {
 		console.error(error);
 	}
-	console.log(ret)
 	return ret;
 }
 
