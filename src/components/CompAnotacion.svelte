@@ -121,16 +121,16 @@
 
 <style>
 	.fc-anotacion {
-		background-color: #cfedff;
-		border: 1px solid #b3b1b1;
+		background-color: transparent;
+		border: 1px solid #fbffff;
 		border-radius: 5px;
 		width: 100%;
 		margin: 2px 0;
-		padding: 0.35rem;
+		padding: 0.5em;
 	}
 
 	.fc-anotacion:focus {
-		border: 1px solid #5f5f5f;
+		border: 1px solid #a5a0a0;
 		outline: none;
 	}
 
