@@ -29,7 +29,7 @@
 	$: filtros = storeanotaciones.listafiltros;
 	$: listafiltros = $filtros;
 
-	let orden: Orden = 'asc';
+	let orden: Orden = 'desc';
 	let agregar: boolean = false;
 	let filtro: typeof FiltroEstado[number] = 'todos';
 	const setfiltrodefault = () => {
@@ -38,9 +38,23 @@
 </script>
 
 <div class="row">
-	<div class="col-2">
+	<div class="col-10">
+		<i class="bi bi-funnel"></i>
+		<select bind:value={filtro} class="bgselect" aria-label=".form-select-sm example">
+			{#each listafiltros as filtro}
+				<option value={filtro.estado}>{filtro.estado} ({filtro.cantidad})</option>
+			{/each}
+		</select>
+		<button class="btn" on:click={() => (orden === 'asc' ? (orden = 'desc') : (orden = 'asc'))}>
+			{#if orden === 'asc'}
+				<i class="bi bi-arrow-up" />
+			{:else}
+				<i class="bi bi-arrow-down" />
+			{/if}
+		</button>
+	</div>
+	<div class="col-2 text-end">
 		{#if categoria !== 'ALL'}
-			<!-- content here -->
 			<!-- svelte-ignore a11y-invalid-attribute -->
 			<a href="#" class="btn bgadd" on:click={() => (agregar = !agregar)}>
 				{#if !agregar}
@@ -51,28 +65,14 @@
 			</a>
 		{/if}
 	</div>
-	<div class="col-10 text-end">
-			<select bind:value={filtro} class="bgselect" aria-label=".form-select-sm example">
-				{#each listafiltros as filtro}
-					<option value={filtro.estado}>{filtro.estado} ({filtro.cantidad})</option>
-				{/each}
-			</select>
-		<button class="btn" on:click={() => (orden === 'asc' ? (orden = 'desc') : (orden = 'asc'))}>
-			{#if orden === 'asc'}
-				<i class="bi bi-arrow-up" />
-			{:else}
-				<i class="bi bi-arrow-down" />
-			{/if}
-		</button>
-	</div>
 </div>
 
 Cant: {lista.length}
 {#if filtro !== 'todos'}
-		<span class="mx-1 text-capitalize text-primary">{filtro}</span>
-		<button class="btn btn-sm link-primary" on:click={() => (filtro = 'todos')}>
-			<i class="bi bi-x-lg" />
-		</button>
+	<span class="mx-1 text-capitalize text-primary">{filtro}</span>
+	<button class="btn btn-sm link-primary" on:click={() => (filtro = 'todos')}>
+		<i class="bi bi-x-lg" />
+	</button>
 {/if}
 
 <ListaAnotaciones {agregar} anotaciones={lista} {categoria} on:saved={() => (agregar = false)} />
