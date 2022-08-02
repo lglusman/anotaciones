@@ -31,9 +31,7 @@
 
 	let orden: Orden = 'asc';
 	let agregar: boolean = false;
-	let mostrarfiltros: boolean = false;
 	let filtro: typeof FiltroEstado[number] = 'todos';
-	$: mostrarfiltros = !!filtro && !filtro;
 	const setfiltrodefault = () => {
 		filtro = 'todos';
 	};
@@ -54,17 +52,11 @@
 		{/if}
 	</div>
 	<div class="col-10 text-end">
-		<button class="btn" on:click={() => (mostrarfiltros = !mostrarfiltros)}>
-			<i class="bi bi-funnel" />
-		</button>
-
-		{#if mostrarfiltros}
 			<select bind:value={filtro} class="bgselect" aria-label=".form-select-sm example">
 				{#each listafiltros as filtro}
 					<option value={filtro.estado}>{filtro.estado} ({filtro.cantidad})</option>
 				{/each}
 			</select>
-		{/if}
 		<button class="btn" on:click={() => (orden === 'asc' ? (orden = 'desc') : (orden = 'asc'))}>
 			{#if orden === 'asc'}
 				<i class="bi bi-arrow-up" />
