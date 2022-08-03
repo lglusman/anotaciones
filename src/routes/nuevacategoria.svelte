@@ -4,6 +4,6 @@
 </script>
 
 <div class="mt-3">
-<CompCategoria />
-<ListaCategorias />
+	<CompCategoria />
+	<ListaCategorias />
 </div>
