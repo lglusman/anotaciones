@@ -10,6 +10,7 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import ComboCategorias from '../components/ComboCategorias.svelte';
+	import MyDialog from '../components/MyDialog.svelte';
 
 	let selectedcat: string = '';
 
@@ -42,6 +43,7 @@
 			});
 		}
 	}
+	$: console.log($user);
 	// $: selectedcat = $page.params.categoria || '';
 
 	$: {
@@ -101,30 +103,16 @@
 	</div>
 </nav>
 <div class="container-fluid cont">
-	<!-- {#if $storecategorias && $user && !mostrariracategoria}
-		Categoria:
-		<select class="bgselect" bind:value={selectedcat}>
-			{#each cats as categoria}
-				<option value={categoria.id}>{categoria.categoria}</option>
-			{/each}
-		</select>
-	{/if}
-	{#if mostrariracategoria && $user }
-		Categoria:
-		<select class="bgselect" bind:value={selectedcat}>
-			{#each catsir as categoria}
-				<option value={categoria.id}>{categoria.categoria}</option>
-				
-			{/each}
-			</select>
-	{/if} -->
-	<div class="row">
-		<div class="col-12">
-			<ComboCategorias bind:idcateg={selectedcat} {mostrariracategoria} />
+	{#if $user}
+		<div class="row">
+			<div class="col-12">
+				<ComboCategorias bind:idcateg={selectedcat} {mostrariracategoria} />
+			</div>
 		</div>
-	</div>
+	{/if}
 	<slot />
 </div>
+<MyDialog />
 
 <style>
 	.cont {
