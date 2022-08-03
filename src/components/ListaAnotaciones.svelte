@@ -11,7 +11,6 @@
 	export let anotaciones: Anotacion[] = [];
 
 	$: nrocategorias = [...new Map(anotaciones.map((x) => [x.categoria, x])).values()].length;
-	$: console.log(nrocategorias);
 
 	const dispatch = createEventDispatcher();
 
@@ -77,7 +76,7 @@
 				<div class="card {index % 2 === 0 ? 'card1' : 'card2'} border-0 shadow">
 					<div class="card-body">
 						{#if nrocategorias > 1}
-						<div class="">{NombreCategoria(anotacion.categoria)}</div>
+							<div class="">{NombreCategoria(anotacion.categoria)}</div>
 						{/if}
 						<h5 class="card-title">
 							{anotacion.descripcion}

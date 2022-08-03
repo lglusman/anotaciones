@@ -39,7 +39,6 @@
 
 
 	const volver = () => {
-		console.log(categvolver)
 		// goto(`/anotaciones/${anotacion?.categoria}`, { replaceState: true });
 		goto(`/anotaciones/${categvolver}`, { replaceState: true });
 	};

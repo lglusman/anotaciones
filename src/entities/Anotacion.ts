@@ -28,31 +28,6 @@ export class Anotacion {
 		this.userid = _anotacion.userid;
 	}
 
-	// toDTO(): DTOAnotacion {
-	// 	return new DTOAnotacion({
-	// 		id: this.id || '',
-	// 		fechacreacion: this.fechacreacion.toLocaleDateString('en-US'),
-	// 		descripcion: this.descripcion,
-	// 		categoria: this.categoria,
-	// 		fechaprevisto: this.fechaprevisto ? this.fechaprevisto.toLocaleDateString('en-US') : '',
-	// 		fecharealizado: this.fecharealizado ? this.fecharealizado.toLocaleDateString('en-US') : '',
-	// 		userid: this.userid
-	// 	});
-	// }
-
-	// static fromDTO(dto: DTOAnotacion): Anotacion {
-	// 	return new Anotacion({
-	// 		id: dto.id,
-	// 		fechacreacion: new Date(dto.fechacreacion),
-	// 		descripcion: dto.descripcion,
-	// 		categoria: dto.categoria,
-	// 		userid: dto.userid,
-	// 		fechaprevisto: dto.fechaprevisto ? new Date(dto.fechaprevisto) : null,
-	// 		fecharealizado: dto.fecharealizado ? new Date(dto.fecharealizado) : null
-	// 	});
-	// }
-
-	
 	async Save(): Promise<void> {
 		this.ValidateSave();
 		await DALAnotacion.Save(this);
@@ -90,29 +65,3 @@ export class Anotacion {
 	}
 }
 
-// export class DTOAnotacion {
-// 	id: string;
-// 	fechacreacion: string;
-// 	descripcion: string;
-// 	categoria: string;
-// 	fechaprevisto: string;
-// 	fecharealizado: string;
-// 	userid: string;
-// 	constructor(_anotacion: {
-// 		id: string;
-// 		fechacreacion: string;
-// 		descripcion: string;
-// 		categoria: string;
-// 		userid: string;
-// 		fechaprevisto: string;
-// 		fecharealizado: string;
-// 	}) {
-// 		this.id = _anotacion.id;
-// 		this.fechacreacion = _anotacion.fechacreacion;
-// 		this.descripcion = _anotacion.descripcion;
-// 		this.categoria = _anotacion.categoria;
-// 		this.fechaprevisto = _anotacion.fechaprevisto;
-// 		this.fecharealizado = _anotacion.fecharealizado;
-// 		this.userid = _anotacion.userid;
-// 	}
-// }
