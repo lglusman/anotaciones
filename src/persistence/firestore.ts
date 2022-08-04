@@ -68,7 +68,6 @@ async function GetMany(quer: FireQuery, COLECTION: string): Promise<TypeData[]> 
 }
 
 async function GetAll(COLECTION: string): Promise<TypeData[]> {
-	console.log('GetAll', COLECTION);
 	if (COLECTION === undefined) return [];
 	const ret: TypeData[] = [];
 	try {

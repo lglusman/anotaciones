@@ -43,7 +43,6 @@
 			});
 		}
 	}
-	$: console.log($user);
 	// $: selectedcat = $page.params.categoria || '';
 
 	$: {

@@ -1,4 +1,8 @@
 <script lang="ts">
+import { beforeUpdate } from "svelte";
+import { Categoria } from '../entities/Categoria';
+	import { storecategorias } from '../stores/categorias';
+
 	let dialog: HTMLDialogElement;
 
 	const mostrar = () => {
@@ -9,9 +13,14 @@
 		dialog.close();
 	};
 
-	const logout = () => {
-		alert('logout');
-	};
+  let cats: Categoria[] = [];
+
+
+	beforeUpdate(() => {
+		cats = [...$storecategorias.sort((a, b) => a.categoria.localeCompare(b.categoria))];
+		let todos = new Categoria({ id: 'ALL', categoria: 'Todas' });
+		cats = [todos, ...cats];
+	});
 </script>
 
 <button on:click={() => mostrar()}> modal </button>
@@ -19,21 +28,17 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Modal title</h5>
-        <button type="button" class="close" on:click={() => ocultar()}>
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <h5 class="modal-title">Menu</h5>
+        <button type="button" tabindex="-1" class="btn-close" data-bs-dismiss="modal" aria-label="Close" on:click={() => ocultar()}></button>
       </div>
       <div class="modal-body">
-        <p>Modal body text goes here.</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" on:click={() => ocultar()}>
-          Close
-        </button>
-        <button type="button" class="btn btn-primary" on:click={() => logout()}>
-          Save changes
-        </button>
+  <ul class="list-group">
+    {#each cats as categoria}
+    <li class="list-group-item">
+      <a class="nav-link" href={`/anotaciones/${categoria.id}`} on:click={() => ocultar()}> {categoria.categoria}</a>
+    </li>
+		{/each}
+  </ul>
       </div>
     </div>
   </div>
@@ -42,6 +47,9 @@
 <style>
 	dialog {
 		text-align: center;
+    border: solid gray 2px;
+  border-radius: 10px;
+    
 	}
 	/* Backdrop is only displayed when dialog is opened using showModal() method */
 	dialog::backdrop {
