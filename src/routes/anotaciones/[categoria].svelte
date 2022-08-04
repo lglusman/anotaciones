@@ -4,9 +4,11 @@
 	import { goto } from '$app/navigation';
 	import ListaAnotaciones from '../../components/ListaAnotaciones.svelte';
 	import { storeanotaciones } from '../../stores/anotaciones';
+	import { storecategorias } from '../../stores/categorias';
 	import { page } from '$app/stores';
 	import type { Anotacion } from '../../entities/Anotacion';
 	import type { FiltroEstado, Orden } from '../../entities/types';
+	import type { Categoria } from 'src/entities/Categoria';
 
 	onMount(() => {
 		if (!$user) {
@@ -35,11 +37,16 @@
 	const setfiltrodefault = () => {
 		filtro = 'todos';
 	};
+	$: categ =
+		categoria === 'ALL'
+			? 'Todas'
+			: $storecategorias.find((x: Categoria) => x.id === categoria)?.categoria;
 </script>
 
 <div class="row">
+	<h3 class="text-center">{categ}</h3>
 	<div class="col-10">
-		<i class="bi bi-funnel"></i>
+		<i class="bi bi-funnel" />
 		<select bind:value={filtro} class="bgselect" aria-label=".form-select-sm example">
 			{#each listafiltros as filtro}
 				<option value={filtro.estado}>{filtro.estado} ({filtro.cantidad})</option>
