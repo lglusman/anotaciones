@@ -10,10 +10,12 @@
 
 	const del = async () => {
 		if (confirm('¿Está seguro de eliminar esta categoría?')) {
+			console.log($storecategorias);
+			console.log(nuevacategoria);
 			await Categoria.Delete(nuevacategoria.id || '');
+			await tick();
 			storecategorias.del(nuevacategoria.id || '');
-			// await tick();
-			//
+			
 		}
 	};
 

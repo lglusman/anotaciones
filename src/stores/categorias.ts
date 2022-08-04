@@ -17,7 +17,13 @@ const createCategorias = () => {
       set(categorias)
     },
     del: (id: string) => {
-      update(categorias => categorias.filter(element => element.id != id))
+      update((categoria) => {
+				const index = categoria.findIndex((a) => a.id === id);
+				if (index === -1) {
+					return categoria;
+				}
+				return [...categoria.slice(0, index), ...categoria.slice(index + 1)];
+			});
     }
   }
 }

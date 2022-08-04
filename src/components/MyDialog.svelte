@@ -1,20 +1,17 @@
 <script lang="ts">
-import { beforeUpdate } from "svelte";
-import { Categoria } from '../entities/Categoria';
+	import { beforeUpdate } from 'svelte';
+	import { Categoria } from '../entities/Categoria';
 	import { storecategorias } from '../stores/categorias';
+	import { user } from '../stores/users';
+	import { logout } from '../firebase';
 
 	let dialog: HTMLDialogElement;
 
-	const mostrar = () => {
-		dialog.showModal();
-	};
+	export let show: boolean = true;
 
-  const ocultar = () => {
-		dialog.close();
-	};
+	let cats: Categoria[] = [];
 
-  let cats: Categoria[] = [];
-
+	$: show ? dialog?.showModal() : dialog?.close();
 
 	beforeUpdate(() => {
 		cats = [...$storecategorias.sort((a, b) => a.categoria.localeCompare(b.categoria))];
@@ -23,36 +20,79 @@ import { Categoria } from '../entities/Categoria';
 	});
 </script>
 
-<button on:click={() => mostrar()}> modal </button>
-<dialog bind:this={dialog}>
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Menu</h5>
-        <button type="button" tabindex="-1" class="btn-close" data-bs-dismiss="modal" aria-label="Close" on:click={() => ocultar()}></button>
-      </div>
-      <div class="modal-body">
-  <ul class="list-group">
-    {#each cats as categoria}
-    <li class="list-group-item">
-      <a class="nav-link" href={`/anotaciones/${categoria.id}`} on:click={() => ocultar()}> {categoria.categoria}</a>
-    </li>
-		{/each}
-  </ul>
-      </div>
-    </div>
-  </div>
+<dialog bind:this={dialog} class="shadow">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title my-3"> </h5>
+
+				<div class="btn-close" on:click={() => (show = false)} />
+			</div>
+			<div class="modal-body">
+				{#if $user}
+					<div class="list-group">
+						<a
+							class="list-group-item list-group-item-action logout"
+							href="/"
+							on:click={() => logout()}><i class="bi bi-door-closed-fill"></i> Logout</a
+						>
+					</div>
+          <hr>
+					<div class="list-group">
+						<a
+							class="list-group-item list-group-item-action nuevacategoria"
+							href="/nuevacategoria"
+							on:click={() => (show = false)}>Nueva Categoria</a
+						>
+					</div>
+          <hr>
+					<h5>Seleccione:</h5>
+					<div class="list-group">
+						{#each cats as categoria}
+							<a
+								class="list-group-item list-group-item-action categorias"
+								href={`/anotaciones/${categoria.id}`}
+								on:click={() => (show = false)}
+							>
+								{categoria.categoria}</a
+							>
+						{/each}
+					</div>
+				{:else}
+					<div class="list-group">
+						<a
+							class="list-group-item list-group-item-action nuevacategoria"
+							href="/login"
+							on:click={() => (show = false)}><i class="bi bi-door-open-fill"></i> Login</a
+						>
+					</div>
+				{/if}
+			</div>
+		</div>
+	</div>
 </dialog>
 
 <style>
 	dialog {
+    border-radius: 10px;
+    border: none;
 		text-align: center;
-    border: solid gray 2px;
-  border-radius: 10px;
-    
+		background: #c8f4fa;
 	}
-	/* Backdrop is only displayed when dialog is opened using showModal() method */
 	dialog::backdrop {
-		background: rgba(0, 0, 0, 0.5);
+		background: rgba(0, 0, 0, 0.2);
 	}
+	.btn-close {
+		cursor: pointer;
+	}
+
+	.logout {
+		background-color: #f8dada;
+	}
+	.nuevacategoria {
+		background-color: #dbf8da;
+	}
+  .categorias{
+    background-color: #f6fce8;
+  }
 </style>

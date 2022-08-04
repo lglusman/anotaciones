@@ -1,11 +1,13 @@
 <script lang="ts">
 	import { storecategorias } from '../stores/categorias';
 	import CompCategoria from './CompCategoria.svelte';
+
+	$: categorias = $storecategorias
 </script>
 
-{#if $storecategorias}
+{#if categorias}
 	<div class="row">
-		{#each $storecategorias as categoria, index}
+		{#each categorias as categoria (categoria.id)}
 			<div class="col-12">
 				<CompCategoria cat={categoria} />
 			</div>

@@ -5,33 +5,17 @@
 	import { storeanotaciones } from '../stores/anotaciones';
 	import { Categoria } from '../entities/Categoria';
 	import { Anotacion } from '../entities/Anotacion';
-	import { logout } from '../firebase';
 	import icon from '../assets/favicon.png';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
-	import ComboCategorias from '../components/ComboCategorias.svelte';
 	import MyDialog from '../components/MyDialog.svelte';
 
 	let selectedcat: string = '';
-
-	$: filtros = storeanotaciones.listafiltros;
-	$: listafiltros = $filtros;
+	let mostrarmenu: boolean = false;
 
 	const paginanoincluyeanotaciones = () => {
 		return !$page.url.pathname.toString().includes('anotaciones');
 	};
-
-	let mostrariracategoria = false;
-
-	beforeUpdate(() => {
-		if (paginanoincluyeanotaciones()) {
-			mostrariracategoria = true;
-			selectedcat = '';
-		} else {
-			mostrariracategoria = false;
-			selectedcat = $page.params.categoria;
-		}
-	});
 
 	$: {
 		if ($user) {
@@ -61,57 +45,16 @@
 		<button
 			class="navbar-toggler"
 			type="button"
-			data-bs-toggle="offcanvas"
-			data-bs-target="#offcanvasNavbar"
-			aria-controls="offcanvasNavbar"
+			on:click={() => mostrarmenu = true}
 		>
 			<span class="navbar-toggler-icon" />
 		</button>
-		<div
-			class="offcanvas offcanvas-start bgcanvas"
-			tabindex="-1"
-			id="offcanvasNavbar"
-			aria-labelledby="offcanvasNavbarLabel"
-		>
-			<div class="offcanvas-header">
-				<h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close" />
-			</div>
-			<div class="offcanvas-body">
-				<ul class="navbar-nav">
-					{#if $user}
-						<li>
-							<a class="nav-link" href="/nuevacategoria"> <i class="bi bi-tag" /> Categorias</a>
-						</li>
-					{:else}
-						<li>
-							<a class="nav-link" href="/login"><i class="bi bi-person-fill" /> Login</a>
-						</li>
-					{/if}
-
-					{#if $user}
-						<li>
-							<a class="nav-link" href="/" on:click={() => logout()}
-								><i class="bi bi-door-closed-fill" /> Logout</a
-							>
-						</li>
-					{/if}
-				</ul>
-			</div>
-		</div>
 	</div>
 </nav>
 <div class="container-fluid cont">
-	{#if $user}
-		<div class="row">
-			<div class="col-12">
-				<ComboCategorias bind:idcateg={selectedcat} {mostrariracategoria} />
-			</div>
-		</div>
-	{/if}
 	<slot />
 </div>
-<MyDialog />
+<MyDialog bind:show={mostrarmenu} />
 
 <style>
 	.cont {
@@ -122,7 +65,4 @@
 		border-bottom: #c0e4fc solid 2px;
 	}
 
-	.bgcanvas {
-		background-color: #f6fce8;
-	}
 </style>
