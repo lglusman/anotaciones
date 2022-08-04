@@ -8,7 +8,7 @@
 	import icon from '../assets/favicon.png';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
-	import MyDialog from '../components/MyDialog.svelte';
+	import MenuDialog from '../components/MenuDialog.svelte';
 
 	let selectedcat: string = '';
 	let mostrarmenu: boolean = false;
@@ -54,7 +54,7 @@
 <div class="container-fluid cont">
 	<slot />
 </div>
-<MyDialog bind:show={mostrarmenu} />
+<MenuDialog bind:show={mostrarmenu} />
 
 <style>
 	.cont {
